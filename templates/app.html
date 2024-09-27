@@ -10,19 +10,20 @@
 
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
-    <title>App</title>
+    <title>App Contacto</title>
 </head>
 <body>
     <div class="container">
       <table class="table table-sm">
         <thead>
           <tr>
-            <th>Id Curso Pago</th>
-            <th>Teléfono</th>
-            <th>Archivo</th>
+            <th>Id Contacto</th>
+            <th>Correo Electrónico</th>
+            <th>Nombre</th>
+            <th>Asunto</th>
           </tr>
         </thead>
-        <tbody id="tbodyCursosPagos"></tbody>
+        <tbody id="tbodyContactos"></tbody>
       </table>
     </div>
 
@@ -30,16 +31,18 @@
 
     <script>
         window.addEventListener("load", function (event) {
+            // Realizamos un SELECT a la BD y lo imprimimos en el TBODY
             function buscar() {
                 $.get("/buscar", function (respuesta) {
-                    $("#tbodyCursosPagos").html("");
+                    $("#tbodyContactos").html("");
 
                     // Iterar sobre los registros devueltos
-                    respuesta.data.forEach(function(cursoPago) {
-                        $("#tbodyCursosPagos").append(`<tr>
-                            <td>${cursoPago[0]}</td>
-                            <td>${cursoPago[1]}</td>
-                            <td>${cursoPago[2]}</td>
+                    respuesta.data.forEach(function(contacto) {
+                        $("#tbodyContactos").append(`<tr>
+                            <td>${contacto[0]}</td>
+                            <td>${contacto[1]}</td>
+                            <td>${contacto[2]}</td>
+                            <td>${contacto[3]}</td>
                         </tr>`);
                     });
                 });
@@ -53,13 +56,16 @@
                 cluster: "us3"
             });
 
-            var channel = pusher.subscribe("canalCursosPagos");
+            // Canal Pusher
+            var channel = pusher.subscribe("canalContactos");
 
-            channel.bind("registroCursoPago", function (cursoPago) {
-                $("#tbodyCursosPagos").prepend(`<tr>
-                    <td>${cursoPago.Id_Curso_Pago}</td>
-                    <td>${cursoPago.Telefono}</td>
-                    <td>${cursoPago.Archivo}</td>
+            // Evento de Pusher
+            channel.bind("registroContacto", function (contacto) {
+                $("#tbodyContactos").prepend(`<tr>
+                    <td>${contacto.Id_Contacto}</td>
+                    <td>${contacto.Correo_Electronico}</td>
+                    <td>${contacto.Nombre}</td>
+                    <td>${contacto.Asunto}</td>
                 </tr>`);
             });
         });
