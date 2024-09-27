@@ -4,7 +4,6 @@ import mysql.connector
 import datetime
 import pytz
 
-# Conexión a la base de datos
 con = mysql.connector.connect(
   host="185.232.14.52",
   database="u760464709_tst_sep",
@@ -32,7 +31,7 @@ def buscar():
 
     return {"data": registros}
 
-# Ruta para registrar un nuevo contacto
+
 @app.route("/registrar", methods=["GET"])
 def registrar():
     args = request.args
@@ -41,7 +40,7 @@ def registrar():
         con.reconnect()
     cursor = con.cursor()
 
-    # Insertar nuevo registro en la tabla de contactos
+  
     sql = "INSERT INTO tst0_contacto (Correo_Electronico, Nombre, Asunto) VALUES (%s, %s, %s)"
     val = (args["correo_electronico"], args["nombre"], args["asunto"])
     cursor.execute(sql, val)
