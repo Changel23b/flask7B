@@ -2,6 +2,8 @@ from flask import Flask, render_template, request
 import pusher
 import mysql.connector
 import datetime
+import pytz
+
 
 # Configuración de la conexión a la base de datos
 con = mysql.connector.connect(
@@ -25,7 +27,7 @@ def buscar():
         con.reconnect()
 
     cursor = con.cursor()
-    cursor.execute("SELECT * FROM contacto ORDER BY Id_Contacto DESC")
+    cursor.execute("SELECT * FROM tst0_contacto ORDER BY Id_Contacto DESC")
     registros = cursor.fetchall()
 
     con.close()
@@ -43,7 +45,7 @@ def registrar():
     cursor = con.cursor()
 
     # Insertamos el nuevo contacto en la base de datos
-    sql = "INSERT INTO contacto (Correo_Electronico, Nombre, Asunto) VALUES (%s, %s, %s)"
+    sql = "INSERT INTO tst0_contacto (Correo_Electronico, Nombre, Asunto) VALUES (%s, %s, %s)"
     val = (args["correo"], args["nombre"], args["asunto"])
     cursor.execute(sql, val)
     
