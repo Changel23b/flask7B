@@ -10,19 +10,19 @@
 
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
-    <title>Contacto</title>
+    <title>App</title>
 </head>
 <body>
     <div class="container">
       <table class="table table-sm">
         <thead>
           <tr>
-            <th>Correo Electrónico</th>
-            <th>Nombre</th>
-            <th>Asunto</th>
+            <th>Id Curso Pago</th>
+            <th>Teléfono</th>
+            <th>Archivo</th>
           </tr>
         </thead>
-        <tbody id="tbodyContactos"></tbody>
+        <tbody id="tbodyCursosPagos"></tbody>
       </table>
     </div>
 
@@ -32,33 +32,37 @@
         window.addEventListener("load", function (event) {
             function buscar() {
                 $.get("/buscar", function (respuesta) {
-                    $("#tbodyContactos").html("");
+                    $("#tbodyCursosPagos").html("");
 
-                    for (var x in respuesta) {
-                        var contacto = respuesta[x];
-                        $("#tbodyContactos").append(`<tr>
-                            <td>${contacto[1]}</td>
-                            <td>${contacto[2]}</td>
-                            <td>${contacto[3]}</td>
+                    // Iterar sobre los registros devueltos
+                    respuesta.data.forEach(function(cursoPago) {
+                        $("#tbodyCursosPagos").append(`<tr>
+                            <td>${cursoPago[0]}</td>
+                            <td>${cursoPago[1]}</td>
+                            <td>${cursoPago[2]}</td>
                         </tr>`);
-                    }
+                    });
                 });
             }
 
             buscar();
 
             Pusher.logToConsole = true;
-
+            
             var pusher = new Pusher("6ffe9987dac447a007d3", {
                 cluster: "us3"
             });
 
-            var channel = pusher.subscribe("canalContactos");
+            var channel = pusher.subscribe("canalCursosPagos");
 
-            channel.bind("nuevoContacto", function (contacto) {
-                buscar();
+            channel.bind("registroCursoPago", function (cursoPago) {
+                $("#tbodyCursosPagos").prepend(`<tr>
+                    <td>${cursoPago.Id_Curso_Pago}</td>
+                    <td>${cursoPago.Telefono}</td>
+                    <td>${cursoPago.Archivo}</td>
+                </tr>`);
             });
         });
-    </script>
+    </script>    
 </body>
 </html>
