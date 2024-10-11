@@ -53,11 +53,11 @@ def registrar():
 
     # Configuración de Pusher
     pusher_client = pusher.Pusher(
-        app_id = "1872169",
-        key = "6ffe9987dac447a007d3",
-        secret = "3a562d889c72593dd4b5",
-        cluster = "us3",
-        ssl=True
+       app_id='1872169',
+       key='6ffe9987dac447a007d3',
+       secret='3a562d889c72593dd4b5',
+       cluster='us3',
+       ssl=True
     )
 
     # Crear el objeto contacto
