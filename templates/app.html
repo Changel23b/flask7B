@@ -12,10 +12,27 @@
     <div class="container">
         <h1>Lista de Contactos</h1>
 
-        <!-- Botón de actualizar -->
-        <button id="btnActualizar" class="btn btn-primary mb-3">Actualizar</button>
+        <!-- Formulario para agregar o editar contacto -->
+        <form id="formContacto">
+            <input type="hidden" id="id_contacto" name="id_contacto">
+            <div class="mb-3">
+                <label for="correo_electronico" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" id="correo_electronico" name="correo_electronico" required>
+            </div>
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" required>
+            </div>
+            <div class="mb-3">
+                <label for="asunto" class="form-label">Asunto</label>
+                <input type="text" class="form-control" id="asunto" name="asunto" required>
+            </div>
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <button id="btnActualizar" class="btn btn-primary ms-2">Actualizar</button>
+        </form>
 
-        <table class="table table-sm">
+        <!-- Tabla para mostrar los contactos -->
+        <table class="table table-sm mt-3">
             <thead>
                 <tr>
                     <th>Id Contacto</th>
@@ -65,7 +82,7 @@
             // Canal Pusher
             var channel = pusher.subscribe("canalContactos");
 
-            // Evento de Pusher para agregar
+            // Evento de Pusher para agregar contacto
             channel.bind("registroContacto", function (contacto) {
                 $("#tbodyContactos").prepend(`<tr>
                     <td>${contacto.Id_Contacto}</td>
@@ -97,14 +114,15 @@
                 $("#asunto").val(asunto);
             };
 
-            // Enviar el formulario para guardar cambios
+            // Enviar el formulario para guardar (ya sea agregar o editar)
             $("#formContacto").submit(function(event) {
                 event.preventDefault();
 
                 var formData = $(this).serialize();
 
-                $.post("/modificar", formData, function() {
-                    buscar(); // Volver a cargar los contactos después de guardar
+                // Llamada AJAX para guardar el contacto (nuevo o editado)
+                $.post("/registrar", formData, function() {
+                    buscar(); // Vuelve a cargar la lista de contactos
                     $("#formContacto")[0].reset(); // Limpiar formulario
                 });
             });
@@ -119,7 +137,8 @@
             };
 
             // Función del botón actualizar para refrescar manualmente la lista
-            $("#btnActualizar").click(function() {
+            $("#btnActualizar").click(function(event) {
+                event.preventDefault(); // Evitar el envío del formulario
                 buscar(); // Vuelve a cargar la lista de contactos
             });
         });
