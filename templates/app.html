@@ -119,12 +119,22 @@
                 event.preventDefault();
 
                 var formData = $(this).serialize();
+                var id_contacto = $("#id_contacto").val();
 
                 // Llamada AJAX para guardar el contacto (nuevo o editado)
-                $.post("/registrar", formData, function() {
-                    buscar(); // Vuelve a cargar la lista de contactos
-                    $("#formContacto")[0].reset(); // Limpiar formulario
-                });
+                if (id_contacto) {
+                    // Si hay un ID, se hace una petición para modificar
+                    $.post("/modificar", formData, function() {
+                        buscar(); // Vuelve a cargar la lista de contactos
+                        $("#formContacto")[0].reset(); // Limpiar formulario
+                    });
+                } else {
+                    // Si no hay ID, se hace una petición para registrar
+                    $.get("/registrar?" + formData, function() {
+                        buscar(); // Vuelve a cargar la lista de contactos
+                        $("#formContacto")[0].reset(); // Limpiar formulario
+                    });
+                }
             });
 
             // Función para eliminar contacto
