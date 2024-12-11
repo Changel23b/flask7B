@@ -14,7 +14,7 @@ class ControladorContactos:
         }
 
     def conectar_bd(self):
-        return mysql.connector.connect(**self.db_config)
+        return mysql.connector.connect(self.db_config)
 
     def notificar_actualizacion(self, evento, data):
         pusher_client = pusher.Pusher(
