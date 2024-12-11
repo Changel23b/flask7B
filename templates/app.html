@@ -28,7 +28,6 @@
                 <input type="text" class="form-control" id="asunto" name="asunto" required>
             </div>
             <button type="submit" class="btn btn-success">Guardar</button>
-            <button id="btnActualizar" class="btn btn-primary ms-2">Actualizar</button>
         </form>
 
         <!-- Tabla para mostrar los contactos -->
@@ -52,18 +51,18 @@
         window.addEventListener("load", function (event) {
             // Función para buscar y cargar contactos
             function buscar() {
-                $.get("/buscar", function (respuesta) {
+                $.get("/contactos/buscar", function (respuesta) {
                     $("#tbodyContactos").html("");
 
                     respuesta.data.forEach(function(contacto) {
                         $("#tbodyContactos").append(`<tr>
-                            <td>${contacto[0]}</td>
-                            <td>${contacto[1]}</td>
-                            <td>${contacto[2]}</td>
-                            <td>${contacto[3]}</td>
+                            <td>${contacto.Id_Contacto}</td>
+                            <td>${contacto.Correo_Electronico}</td>
+                            <td>${contacto.Nombre}</td>
+                            <td>${contacto.Asunto}</td>
                             <td>
-                                <button class="btn btn-warning btn-sm" onclick="editar(${contacto[0]}, '${contacto[1]}', '${contacto[2]}', '${contacto[3]}')">Editar</button>
-                                <button class="btn btn-danger btn-sm" onclick="eliminar(${contacto[0]})">Eliminar</button>
+                                <button class="btn btn-warning btn-sm" onclick="editar(${contacto.Id_Contacto}, '${contacto.Correo_Electronico}', '${contacto.Nombre}', '${contacto.Asunto}')">Editar</button>
+                                <button class="btn btn-danger btn-sm" onclick="eliminar(${contacto.Id_Contacto})">Eliminar</button>
                             </td>
                         </tr>`);
                     });
@@ -97,12 +96,12 @@
             });
 
             // Evento de Pusher para modificar
-            channel.bind("modificarContacto", function (contacto) {
+            channel.bind("modificarContacto", function () {
                 buscar(); // Volver a cargar los contactos para reflejar la modificación
             });
 
             // Evento de Pusher para eliminar
-            channel.bind("eliminarContacto", function (data) {
+            channel.bind("eliminarContacto", function () {
                 buscar(); // Volver a cargar los contactos para reflejar la eliminación
             });
 
@@ -124,13 +123,13 @@
                 // Llamada AJAX para guardar el contacto (nuevo o editado)
                 if (id_contacto) {
                     // Si hay un ID, se hace una petición para modificar
-                    $.post("/modificar", formData, function() {
+                    $.post("/contactos/modificar", formData, function() {
                         buscar(); // Vuelve a cargar la lista de contactos
                         $("#formContacto")[0].reset(); // Limpiar formulario
                     });
                 } else {
                     // Si no hay ID, se hace una petición para registrar
-                    $.get("/registrar?" + formData, function() {
+                    $.get("/contactos/registrar?" + formData, function() {
                         buscar(); // Vuelve a cargar la lista de contactos
                         $("#formContacto")[0].reset(); // Limpiar formulario
                     });
@@ -140,7 +139,7 @@
             // Función para eliminar contacto
             window.eliminar = function(id) {
                 if (confirm("¿Estás seguro de que deseas eliminar este contacto?")) {
-                    $.post("/eliminar", { id_contacto: id }, function() {
+                    $.post("/contactos/eliminar", { id_contacto: id }, function() {
                         buscar(); // Volver a cargar los contactos después de eliminar
                     });
                 }
