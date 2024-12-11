@@ -51,7 +51,7 @@
         window.addEventListener("load", function (event) {
             // Función para buscar y cargar contactos
             function buscar() {
-                $.get("/contactos/buscar", function (respuesta) {
+                $.get("/buscar", function (respuesta) {
                     $("#tbodyContactos").html("");
 
                     respuesta.data.forEach(function(contacto) {
@@ -123,13 +123,13 @@
                 // Llamada AJAX para guardar el contacto (nuevo o editado)
                 if (id_contacto) {
                     // Si hay un ID, se hace una petición para modificar
-                    $.post("/contactos/modificar", formData, function() {
+                    $.post("/modificar", formData, function() {
                         buscar(); // Vuelve a cargar la lista de contactos
                         $("#formContacto")[0].reset(); // Limpiar formulario
                     });
                 } else {
                     // Si no hay ID, se hace una petición para registrar
-                    $.get("/contactos/registrar?" + formData, function() {
+                    $.get("/registrar?" + formData, function() {
                         buscar(); // Vuelve a cargar la lista de contactos
                         $("#formContacto")[0].reset(); // Limpiar formulario
                     });
