@@ -139,7 +139,7 @@
             // Función para eliminar contacto
             window.eliminar = function(id) {
                 if (confirm("¿Estás seguro de que deseas eliminar este contacto?")) {
-                    $.post("/contactos/eliminar", { id_contacto: id }, function() {
+                    $.post("/eliminar", { id_contacto: id }, function() {
                         buscar(); // Volver a cargar los contactos después de eliminar
                     });
                 }
